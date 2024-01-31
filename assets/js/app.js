@@ -35,6 +35,8 @@ const createDeck = () => {
     return deck;
 }
 
+createDeck();
+
 // get card
 const pedirCarta = () => {
 
@@ -71,8 +73,6 @@ btnPedir.addEventListener( 'click', () => {
     carta.src = `assets/cards/${card}.png`;
     divCartasJugador.append(carta);
 
-    setPointsComputer();
-
     return console.log(puntosJugador, ' - ', puntosComputador);
 });
 
@@ -87,9 +87,18 @@ const setPointsComputer = () => {
     cartaComputadora.src = `assets/cards/${card}.png`;
     divCartasComputador.append(cartaComputadora);
 
+    if (puntosComputador > 15 ||  puntosComputador <= 21) {
+        puntosComputador = 21;
+        return;
+    } else {
+        puntosComputador = 21;
+    }
+
     return (puntosComputador < 22 && puntosComputador >= 17) ? puntosComputador===20 : puntosComputador;
 };
 
+setPointsComputer();
+setPointsComputer();
 
 // New game - DONE
 btnNuevoJuego.addEventListener( 'click', () => {
