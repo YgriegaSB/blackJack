@@ -35,6 +35,8 @@ const createDeck = () => {
     return deck;
 }
 
+createDeck();
+
 // get card
 const pedirCarta = () => {
 
@@ -71,23 +73,24 @@ btnPedir.addEventListener( 'click', () => {
     carta.src = `assets/cards/${card}.png`;
     divCartasJugador.append(carta);
 
-    setPointsComputer();
-
     return console.log(puntosJugador, ' - ', puntosComputador);
 });
 
 const setPointsComputer = () => {
-    
-    const card = pedirCarta();
-    puntosComputador += valorCarta(card);
-    puntosHtml[1].innerText = puntosComputador;
+    while (puntosComputador < 21) {
+        const card = pedirCarta();
+        const valor = valorCarta(card);
+        if (puntosComputador + valor > 21) {
+            break;
+        }
+        puntosComputador += valor;
+        const cartaComputadora = document.createElement('img');
+        cartaComputadora.classList.add('carta');
+        cartaComputadora.src = `assets/cards/${card}.png`;
+        divCartasComputador.append(cartaComputadora);
+        puntosHtml[1].innerText = puntosComputador;
+    }
 
-    const cartaComputadora = document.createElement('img');
-    cartaComputadora.classList.add('carta')
-    cartaComputadora.src = `assets/cards/${card}.png`;
-    divCartasComputador.append(cartaComputadora);
-
-    return (puntosComputador < 22 && puntosComputador >= 17) ? puntosComputador===20 : puntosComputador;
 };
 
 
@@ -104,23 +107,21 @@ btnNuevoJuego.addEventListener( 'click', () => {
     divCartasComputador.innerHTML = '';
 });
 
-// Develop button stay - DONE (needs work)
-btnQuedarse.addEventListener( 'click', () => {
-    console.log(puntosJugador,' - ', puntosComputador);
-    switch (puntosJugador, puntosComputador) {
-        case puntosJugador === 21 || puntosJugador > 18:
-            alert('Ganaste contra la casa');
-            break;
-        case puntosJugador > 21:
-            alert('Perdiste contra la casa');
-            break;
-        case puntosComputador > 21:
-            alert('Ganaste contra la casa');
-            break;
-        default:
-            alert('Perdiste contra la casa');
-            break;
-    }
+btnQuedarse.addEventListener('click', () => {
+    setPointsComputer();
+
+    const jugadorPerdio = puntosJugador > 21;
+    const casaPerdio = puntosComputador > 21;
+    const empate = puntosJugador === puntosComputador;
+
+    const mensaje =
+        jugadorPerdio ? 'La casa gana. Has perdido por pasarte de 21.' :
+        casaPerdio ? '¡Felicidades! Has ganado. La casa se pasó de 21.' :
+        empate ? 'Empate. Nadie gana.' :
+        puntosJugador > puntosComputador ? '¡Felicidades! Has ganado.' :
+        'La casa gana.';
+
+    alert(mensaje);
 });
 
-createDeck();
+
